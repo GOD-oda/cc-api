@@ -1,7 +1,14 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono';
 
-const app = new Hono()
+type Bindings = {
+  CONFERENCES: KVNamespace;
+}
+const app = new Hono<{Bindings: Bindings}>();
 
-app.get('/', (c) => c.text('Hello Hono!'))
+
+app.get('/api', async (c) => {
+  const foo = await c.env.CONFERENCES.get('foo');
+  return c.json({foo: foo});
+});
 
 export default app

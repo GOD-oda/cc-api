@@ -1,2 +1,7 @@
-name = "my-app"
+name = "cc-api"
 compatibility_date = "2023-01-01"
+
+[[kv_namespaces]]
+binding = "CONFERENCES"
+id = "d30254caf13a44b4813950380f954509"
+preview_id = "8d2e0f74eeb74e01bd1034944d3004b9"
