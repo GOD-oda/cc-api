@@ -5,7 +5,10 @@
     "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {
-    "hono": "^3.3.4"
+    "@hono/zod-validator": "^0.1.5",
+    "dayjs": "^1.11.9",
+    "hono": "^3.3.4",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230628.0",
