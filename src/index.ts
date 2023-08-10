@@ -1,10 +1,12 @@
-import { Hono } from 'hono';
+import {Context, Hono} from 'hono';
 import { zValidator } from '@hono/zod-validator'
 import {z} from "zod";
 import {createConference, getConference, getConferences} from "./app/conference";
+import {auth} from "./app/auth";
 
 type Bindings = {
   CONFERENCES: KVNamespace;
+  TOKEN: string;
 }
 const app = new Hono<{Bindings: Bindings}>();
 
@@ -14,6 +16,7 @@ api.get('/conferences', async (c) => {
 
   return c.json(conferences);
 });
+
 api.get('/conferences/:key', async (c) => {
   const conf = await getConference(c.env.CONFERENCES, c.req.param('key'));
 
@@ -23,6 +26,7 @@ api.get('/conferences/:key', async (c) => {
     return c.notFound();
   }
 });
+
 const schema = z.object({
   key: z.string().regex(/^[a-zA-Z0-9\-_]+$/),
   name: z.string(),
@@ -39,9 +43,13 @@ const zv = zValidator('json', schema, (result, c) => {
     );
   }
 });
-
-
 api.post('/conferences', zv, async (c) => {
+  if (! auth(c)) {
+    return c.json({
+      msg: 'Unauthorized.'
+    }, 401);
+  }
+
   const json = c.req.valid('json');
 
   try {
