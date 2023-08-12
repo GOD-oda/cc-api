@@ -1,4 +1,4 @@
-import {Context, Hono} from 'hono';
+import {Hono} from 'hono';
 import { zValidator } from '@hono/zod-validator'
 import {z} from "zod";
 import {saveConference, getConference, getConferences, Conference} from "./app/conference";
@@ -28,7 +28,7 @@ api.get('/conferences/:key', async (c) => {
 });
 
 const schema = z.object({
-  key: z.string().regex(/^[a-zA-Z0-9\-_]+$/),
+  id: z.string().regex(/^[a-zA-Z0-9\-_]+$/).optional(),
   name: z.string(),
   url: z.string().nullish(),
   started_at: z.string().datetime({offset: true}).nullish(),
