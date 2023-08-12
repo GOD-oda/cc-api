@@ -2,7 +2,7 @@ import {Context, Hono} from 'hono';
 import { zValidator } from '@hono/zod-validator'
 import {z} from "zod";
 import {createConference, getConference, getConferences} from "./app/conference";
-import {auth} from "./app/auth";
+import {bearerAuth} from "hono/bearer-auth";
 
 type Bindings = {
   CONFERENCES: KVNamespace;
@@ -43,13 +43,14 @@ const zv = zValidator('json', schema, (result, c) => {
     );
   }
 });
-api.post('/conferences', zv, async (c) => {
-  if (! auth(c)) {
-    return c.json({
-      msg: 'Unauthorized.'
-    }, 401);
-  }
 
+const bearer = async (c, next) => {
+  const auth = bearerAuth({ token: c.env.TOKEN });
+
+  return auth(c, next);
+}
+
+api.post('/conferences', bearer, zv, async (c) => {
   const json = c.req.valid('json');
 
   try {
