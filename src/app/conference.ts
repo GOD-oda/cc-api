@@ -20,7 +20,6 @@ export const getConferences = async (kv: KVNamespace) => {
   const conferences: Conference[] = [];
 
   for (const k of list.keys) {
-    console.log(k);
     const v = await kv.get<Conference>(k.name, 'json');
     if (v) {
       conferences.push(v);

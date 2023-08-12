@@ -3,6 +3,9 @@ import { zValidator } from '@hono/zod-validator'
 import {z} from "zod";
 import {saveConference, getConference, getConferences, Conference} from "./app/conference";
 import {bearerAuth} from "hono/bearer-auth";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+dayjs.extend(isSameOrAfter);
 
 type Bindings = {
   CONFERENCES: KVNamespace;
@@ -11,10 +14,26 @@ type Bindings = {
 const app = new Hono<{Bindings: Bindings}>();
 
 const api = app.basePath('/api');
-api.get('/conferences', async (c) => {
+const searchSchema = z.object({
+  started_at: z.string().datetime({offset: true}).optional()
+});
+const searchZv = zValidator('query', searchSchema, (result, c) => {
+  if (!result) {
+    return c.json(
+      {},
+      400
+    );
+  }
+});
+api.get('/conferences', searchZv, async (c) => {
   const conferences = await getConferences(c.env.CONFERENCES);
+  const query = c.req.valid('query');
 
-  return c.json(conferences);
+  return c.json(conferences.filter((c) => {
+    if (query.started_at) {
+      return dayjs(c.started_at).isSameOrAfter(dayjs(query.started_at));
+    }
+  }));
 });
 
 api.get('/conferences/:key', async (c) => {
