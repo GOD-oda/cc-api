@@ -33,12 +33,7 @@ export const getConference = async (kv: KVNamespace, id: string) => {
   return await kv.get<Conference>(key(id), 'json');
 }
 
-export const createConference = async (kv: KVNamespace, conference: {key: string}) => {
-  const saved = await kv.get(key(conference.key));
-  if (saved !== null) {
-    throw new Error('Conference has been exist.');
-  }
-
+export const saveConference = async (kv: KVNamespace, conference: Conference) => {
   await kv.put(key(conference.key), JSON.stringify(conference));
 }
 

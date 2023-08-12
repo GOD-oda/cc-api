@@ -1,7 +1,7 @@
 import {Context, Hono} from 'hono';
 import { zValidator } from '@hono/zod-validator'
 import {z} from "zod";
-import {createConference, getConference, getConferences} from "./app/conference";
+import {saveConference, getConference, getConferences, Conference} from "./app/conference";
 import {bearerAuth} from "hono/bearer-auth";
 
 type Bindings = {
@@ -51,10 +51,10 @@ const bearer = async (c, next) => {
 }
 
 api.post('/conferences', bearer, zv, async (c) => {
-  const json = c.req.valid('json');
+  const json = c.req.valid<Conference>('json');
 
   try {
-    await createConference(c.env.CONFERENCES, json);
+    await saveConference(c.env.CONFERENCES, json);
   } catch (e) {
     return c.json({msg: e.message}, 500);
   }
