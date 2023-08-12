@@ -33,6 +33,8 @@ api.get('/conferences', searchZv, async (c) => {
     if (query.started_at) {
       return dayjs(c.started_at).isSameOrAfter(dayjs(query.started_at));
     }
+
+    return c;
   }));
 });
 
