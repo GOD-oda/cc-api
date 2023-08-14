@@ -1,7 +1,7 @@
 import {Hono} from 'hono';
 import { zValidator } from '@hono/zod-validator'
 import {z} from "zod";
-import {saveConference, getConference, getConferences, Conference} from "./app/conference";
+import {saveConference, getConference, getConferences, Conference, deleteConference} from "./app/conference";
 import {bearerAuth} from "hono/bearer-auth";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
@@ -88,6 +88,16 @@ api.put('/conferences/:id', bearer, zv, async (c) => {
 
   try {
     await saveConference(c.env.CONFERENCES, json);
+  } catch (e) {
+    return c.json({msg: e.message}, 500);
+  }
+
+  return c.json({msg: 'success'}, 200);
+});
+
+api.delete('/conferences/:id', bearer, async (c) => {
+  try {
+    await deleteConference(c.env.CONFERENCES, c.req.param('id'));
   } catch (e) {
     return c.json({msg: e.message}, 500);
   }

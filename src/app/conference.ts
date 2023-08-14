@@ -54,6 +54,10 @@ export const saveConference = async (kv: KVNamespace, conference: Conference) =>
   await kv.put(key(c.id), JSON.stringify(conference));
 }
 
+export const deleteConference = async (kv: KVNamespace, id: string) => {
+  await kv.delete(key(id));
+}
+
 const key = (conferenceKey: string) => {
   return `${PREFIX}-${conferenceKey}`;
 }
