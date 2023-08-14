@@ -49,7 +49,6 @@ api.get('/conferences/:key', async (c) => {
 });
 
 const schema = z.object({
-  id: z.string().regex(/^[a-zA-Z0-9\-_]+$/).optional(),
   name: z.string(),
   url: z.string().nullish(),
   started_at: z.string().datetime({offset: true}).nullish(),
@@ -73,6 +72,19 @@ const bearer = async (c, next) => {
 
 api.post('/conferences', bearer, zv, async (c) => {
   const json = c.req.valid<Conference>('json');
+
+  try {
+    await saveConference(c.env.CONFERENCES, json);
+  } catch (e) {
+    return c.json({msg: e.message}, 500);
+  }
+
+  return c.json({msg: 'success'}, 200);
+});
+
+api.put('/conferences/:id', bearer, zv, async (c) => {
+  const json = c.req.valid<Conference>('json');
+  json.id = c.req.param('id');
 
   try {
     await saveConference(c.env.CONFERENCES, json);
