@@ -15,6 +15,15 @@ $ cp .dev.vars.example .dev.vars
 $ npm run dev
 ```
 
+## Add a new conference
+1. Run command
+```shell
+$ npm run create-conference -filename='FILENAME'
+```
+2. Write conference data to contents/conferences/\<FILENAME\>.json
+3. Commit and create a PR
+4. You must attache a `conference-add` label 
+
 ## Deploy
 1. Overwrite kv_namespaces in wrangler.toml 
 2. Run command
