@@ -23,3 +23,28 @@ jobs:
             echo "$file was changed"
             curl -XPOST -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -d "@$file" https://cc-api.god-oda.workers.dev/api/conferences
           done
+  update:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'conference-update')
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v37
+        with:
+          files: |
+            contents/conferences/**.json
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+            read id <<< $(cat $file | jq -r '.id' | xargs)
+            if test ${#id} -eq 0; then
+              echo "id must be required."
+              exit 1
+            fi
+          
+            curl -XPUT -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -d "@$file" "https://cc-api.god-oda.workers.dev/api/conferences/${id}"
+          done
