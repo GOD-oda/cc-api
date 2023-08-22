@@ -1,4 +1,4 @@
-import {Dayjs} from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import {v4 as uuid} from "uuid";
 
 export type Conference = {
@@ -12,7 +12,11 @@ export type Conference = {
 
 const PREFIX = 'conferences';
 
-export const getConferences = async (kv: KVNamespace) => {
+export type SearchCondition = {
+  name: string | undefined
+  started_at: Dayjs | undefined
+}
+export const getConferences = async (kv: KVNamespace, condition: SearchCondition) => {
   const list = await kv.list({
     prefix: PREFIX
   });
@@ -26,7 +30,19 @@ export const getConferences = async (kv: KVNamespace) => {
     }
   }
 
-  return conferences;
+  return conferences.filter((c) => {
+    if (condition.name) {
+      return c.name.toUpperCase().includes(condition.name.toUpperCase());
+    }
+
+    return true;
+  }).filter((c) => {
+    if (condition.started_at) {
+      return dayjs(c.started_at).isSameOrAfter(dayjs(condition.started_at));
+    }
+
+    return true;
+  });
 }
 
 export const getConference = async (kv: KVNamespace, id: string) => {

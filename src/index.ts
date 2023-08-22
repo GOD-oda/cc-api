@@ -15,7 +15,8 @@ const app = new Hono<{Bindings: Bindings}>();
 
 const api = app.basePath('/api');
 const searchSchema = z.object({
-  started_at: z.string().datetime({offset: true}).optional()
+  started_at: z.string().datetime({offset: true}).optional(),
+  name: z.string().optional()
 });
 const searchZv = zValidator('query', searchSchema, (result, c) => {
   if (!result) {
@@ -26,16 +27,13 @@ const searchZv = zValidator('query', searchSchema, (result, c) => {
   }
 });
 api.get('/conferences', searchZv, async (c) => {
-  const conferences = await getConferences(c.env.CONFERENCES);
   const query = c.req.valid('query');
+  const conferences = await getConferences(c.env.CONFERENCES, {
+    name: query.name,
+    started_at: dayjs(query.started_at)
+  });
 
-  return c.json(conferences.filter((c) => {
-    if (query.started_at) {
-      return dayjs(c.started_at).isSameOrAfter(dayjs(query.started_at));
-    }
-
-    return c;
-  }));
+  return c.json(conferences);
 });
 
 api.get('/conferences/:key', async (c) => {
