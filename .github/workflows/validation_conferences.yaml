@@ -20,6 +20,7 @@ jobs:
       - name: List all changed files
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed\n"
+            echo "$file was changed"
+            echo ""
             curl -XPOST -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -d "@$file" https://cc-api.god-oda.workers.dev/api/conferences/validation
           done
