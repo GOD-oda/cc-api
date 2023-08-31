@@ -17,7 +17,7 @@ jobs:
           files: |
             contents/conferences/**.json
 
-      - name: List all changed files
+      - name: Request for validation
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
