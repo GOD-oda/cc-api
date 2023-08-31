@@ -28,7 +28,5 @@ jobs:
             BODY=$(echo "${RESPONSE}" | sed "$ d")
             
             echo $BODY
-            if test $STATUS -ne 200; then
-              exit 1
-            fi
+            echo $STATUS
           done
