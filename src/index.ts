@@ -103,4 +103,8 @@ api.delete('/conferences/:id', bearer, async (c) => {
   return c.json({msg: 'success'}, 200);
 });
 
+api.post('/conferences/validation', bearer, zv, async (c) => {
+  return c.json({msg: 'success'}, 200);
+});
+
 export default app
