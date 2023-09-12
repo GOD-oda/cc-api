@@ -27,8 +27,14 @@ jobs:
             STATUS=$(echo "${RESPONSE}" | tail -n 1)
             BODY=$(echo "${RESPONSE}" | sed "$ d")
             
-            echo $BODY
+            echo "Response body"  
+            echo $BODY | jq
+            echo ""
+          
+            echo "Http status code"
             echo $STATUS
+            echo ""
+          
             if test $STATUS -ne 200; then
               exit 1
             fi
