@@ -21,12 +21,12 @@ jobs:
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
-            echo ""
             
             RESPONSE=$(curl -XPOST -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "Content-Type: application/json" -d "@$file" -w "\n%{response_code}" https://cc-api.god-oda.workers.dev/api/conferences/validation)
             STATUS=$(echo "${RESPONSE}" | tail -n 1)
             BODY=$(echo "${RESPONSE}" | sed "$ d")
-            
+          
+            echo ""
             echo "Response body"  
             echo $BODY | jq
             echo ""
