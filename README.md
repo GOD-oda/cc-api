@@ -19,6 +19,10 @@ $ npm run dev
 1. Run command
 ```shell
 $ npm run create-conference -filename='FILENAME'
+
+or you should try using url option if you want to get automatically conference name and og image. 
+
+$ npm run create-conference -filename='FILENAME' -url=''
 ```
 2. Write conference data to contents/conferences/\<FILENAME\>.json
 3. Commit and create a PR

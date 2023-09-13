@@ -3,7 +3,7 @@
     "dev": "wrangler dev src/index.ts",
     "dev-remote": "wrangler dev --remote src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts",
-    "create-conference": "node --loader ts-node/esm src/createConferenceTemplate.ts ${npm_config_filename}"
+    "create-conference": "node --loader ts-node/esm src/createConferenceTemplate.ts ${npm_config_filename} ${npm_config_url}"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.1.5",
@@ -16,6 +16,7 @@
     "@cloudflare/workers-types": "^4.20230628.0",
     "@types/node": "^20.5.0",
     "@types/uuid": "^9.0.2",
+    "node-html-parser": "^6.1.9",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
     "wrangler": "^3.1.2"
