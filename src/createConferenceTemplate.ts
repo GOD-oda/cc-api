@@ -13,7 +13,7 @@ try{
   let conferenceName = '';
   let ogImageUrl = '';
   const url = process.argv[3];
-  if (url !== undefined) {
+  if (url) {
     await fetch(url)
       .then((res) => res.text())
       .then((body) => {
@@ -30,7 +30,7 @@ try{
   const conf = `{
   "id": "",
   "name": "${conferenceName}",
-  "url": "",
+  "url": "${url}",
   "started_at": "",
   "ended_at": "",
   "logo_image_url": "${ogImageUrl}"
