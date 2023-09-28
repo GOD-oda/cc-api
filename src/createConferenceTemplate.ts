@@ -19,8 +19,8 @@ try{
       .then((body) => {
         const root = parse(body);
 
-        const title = root.querySelector('title');
-        conferenceName = title?.textContent || '';
+        const title = root.querySelector('meta[property="og:title"]');
+        conferenceName = title?.getAttribute('content') || '';
 
         const ogImageMeta = root.querySelector('meta[property="og:image"]');
         ogImageUrl = ogImageMeta?.getAttribute('content') || '';
