@@ -20,7 +20,7 @@ try{
         const root = parse(body);
 
         const title = root.querySelector('meta[property="og:title"]');
-        conferenceName = title?.getAttribute('content') || '';
+        conferenceName = title?.getAttribute('content')?.trim() || '';
 
         const ogImageMeta = root.querySelector('meta[property="og:image"]');
         ogImageUrl = ogImageMeta?.getAttribute('content') || '';
