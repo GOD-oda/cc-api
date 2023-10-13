@@ -4,13 +4,10 @@ cc-api is Conference Calendar API.
 
 ## Setup
 ```shell
-$ npm install
-```
-
-```shell
-$ cp .dev.vars.example .dev.vars
+$ make setup
 ``` 
 
+## Run server
 ```shell
 $ npm run dev
 ```
